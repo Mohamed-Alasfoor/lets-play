@@ -1,6 +1,7 @@
 package com.letsplay.product;
 
 import com.letsplay.user.User;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product create(@RequestBody Product product, @AuthenticationPrincipal Object principal) {
+    public Product create(@Valid @RequestBody Product product, @AuthenticationPrincipal Object principal) {
         if (principal instanceof User) {
             product.setUserId(((User) principal).getId());
         }
@@ -36,7 +37,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody Product product, @AuthenticationPrincipal Object principal) {
+    public ResponseEntity<Product> update(@PathVariable String id, @Valid @RequestBody Product product, @AuthenticationPrincipal Object principal) {
         Product existingProduct = productService.getProductById(id);
         if (principal instanceof User currentUser) {
             if (!existingProduct.getUserId().equals(currentUser.getId()) && !"ROLE_ADMIN".equals(currentUser.getRole())) {
