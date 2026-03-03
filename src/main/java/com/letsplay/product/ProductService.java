@@ -23,4 +23,20 @@ public class ProductService {
         System.out.println("SAVED: " + saved);
         return saved;
     }
+
+    public Product getProductById(String id) {
+        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
+    public Product updateProduct(String id, Product productDetails) {
+        Product product = getProductById(id);
+        product.setName(productDetails.getName());
+        product.setDescription(productDetails.getDescription());
+        product.setPrice(productDetails.getPrice());
+        return productRepository.save(product);
+    }
+
+    public void deleteProduct(String id) {
+        productRepository.deleteById(id);
+    }
 }
